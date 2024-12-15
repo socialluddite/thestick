@@ -58,7 +58,7 @@ def WhiteFade(pix):
         swapNfade(pix,color.WHITE_MED,color.WHITE_LOW,"up",True)
     menu.G.kill=False
 
-def Rainbow(pix):
+def Rainbow2(pix):
     rainbow=[[1,2,3]]*850
     rainbow[0:122]=[color.RED]*122
     rainbow[122:244]=[color.ORANGE]*122
@@ -85,5 +85,37 @@ def Rainbow(pix):
         ind=ind+1
         if(ind>849):
             ind=0
+
+def Rainbow(pix):
+    num_lights = len(pix)
+    segment_length = num_lights // 7  # Divide the total lights into 7 segments
+    
+    # Create the rainbow pattern dynamically
+    rainbow = (
+        [color.RED] * segment_length +
+        [color.ORANGE] * segment_length +
+        [color.YELLOW] * segment_length +
+        [color.GREEN] * segment_length +
+        [color.BLUE] * segment_length +
+        [color.PURPLE_LIGHT] * segment_length +
+        [color.PURPLE] * (num_lights - 6 * segment_length)  # Remainder for last segment
+    )
+    
+    run = 1
+    ind = 0
+    while run > 0:
+        if menu.G.kill:
+            menu.G.kill = False
+            return
+        temprb = rainbow[ind:] + rainbow[:ind]
+        for i in range(num_lights):
+            if menu.G.kill:
+                menu.G.kill = False
+                return
+            pix[i] = [math.floor(x * menu.G.bright) for x in temprb[i]]
+        pix.show()
+        if menu.G.delay > 0:
+            time.sleep(menu.G.delay)
+        ind = (ind + 1) % num_lights
 
 
